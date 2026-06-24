@@ -77,11 +77,11 @@ section{padding:64px 0}
 .orb-lab{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--tx2);margin-top:8px}
 .lc{position:absolute;transform:translate(-50%,-50%);font-size:12px;font-family:"JetBrains Mono";color:var(--tx2);background:rgba(10,9,12,.65);border:1px solid var(--line);border-radius:999px;padding:4px 11px;backdrop-filter:blur(6px);white-space:nowrap}
 @media(max-width:860px){.orb{width:270px;height:270px}.orb-num{font-size:4rem}}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:30px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:30px;perspective:1000px}
 .card{border:1px solid var(--line);background:rgba(12,10,16,.6);border-radius:20px;padding:30px 28px 26px;transition:.22s;position:relative;overflow:hidden}
 .card::before{content:"";position:absolute;inset:0;background:radial-gradient(240px circle at var(--mx,50%) var(--my,0),rgba(255,140,66,.15),transparent 70%);opacity:0;transition:.3s}
 .card:hover::before{opacity:1}
-.card:hover{transform:translateY(-4px);border-color:rgba(255,140,66,.45)}
+.card:hover{border-color:rgba(255,140,66,.45)}
 .card .idx{position:absolute;top:20px;right:24px;font-family:"JetBrains Mono";font-size:13px;color:var(--tx2);opacity:.45}
 .card h3{font-size:1.4rem;font-weight:700}
 .card .badge{display:inline-block;font-family:"JetBrains Mono";font-size:10.5px;font-weight:700;color:#5cf08a;border:1px solid rgba(92,240,138,.4);border-radius:5px;padding:2px 7px;margin-left:8px;vertical-align:middle;letter-spacing:.05em}
@@ -234,7 +234,8 @@ addEventListener('scroll',function(){
   nav.classList.toggle('scrolled',h.scrollTop>40);
 });
 document.querySelectorAll('.card').forEach(function(card){
-  card.addEventListener('pointermove',function(e){var r=card.getBoundingClientRect();card.style.setProperty('--mx',(e.clientX-r.left)+'px');card.style.setProperty('--my',(e.clientY-r.top)+'px')});
+  card.addEventListener('pointermove',function(e){var r=card.getBoundingClientRect();var mx=e.clientX-r.left,my=e.clientY-r.top;card.style.setProperty('--mx',mx+'px');card.style.setProperty('--my',my+'px');var rx=((my/r.height)-.5)*-7,ry=((mx/r.width)-.5)*7;card.style.transform='perspective(800px) rotateX('+rx+'deg) rotateY('+ry+'deg) translateY(-4px)'});
+  card.addEventListener('pointerleave',function(){card.style.transform=''});
 });
 function cnt(el){var to=+el.dataset.to,suf=el.dataset.suffix||'',d=1400,s=null;function f(t){if(!s)s=t;var p=Math.min((t-s)/d,1),e=1-Math.pow(1-p,3),v=Math.round(to*e);el.innerHTML=v+(suf?'<span style="color:var(--accent)">'+suf+'</span>':'');if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
 var co=new IntersectionObserver(function(es){es.forEach(function(y){if(y.isIntersecting){cnt(y.target);co.unobserve(y.target)}})},{threshold:.5});
