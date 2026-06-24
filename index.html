@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="ko"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>insightlab — 공공데이터와 AI로 지역을 잇다</title>
+<meta name="description" content="인사이트랩 — 공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오. 광주든든·수출든든·구직든든.">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#060507;--tx:#f5f3f7;--tx2:#cbc6d8;--line:rgba(255,255,255,.12);--card:rgba(255,255,255,.05);--accent:#FF8C42;--blue:#3b6cf6}
+*{margin:0;padding:0;box-sizing:border-box;word-break:keep-all;overflow-wrap:break-word}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:"Pretendard Variable",sans-serif;line-height:1.75;letter-spacing:-.02em;overflow-x:hidden}
+.dis{font-family:"Space Grotesk",sans-serif;letter-spacing:-.03em}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+#sh{position:fixed;inset:0;z-index:-2;width:100%;height:100%}
+.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+.scrim{position:fixed;inset:0;z-index:-1;pointer-events:none;background:rgba(6,5,7,.36)}
+#cursor{position:fixed;width:380px;height:380px;border-radius:50%;pointer-events:none;z-index:0;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(255,140,66,.14),transparent 65%);transition:opacity .3s;mix-blend-mode:screen}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),#ec4899);z-index:50;width:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:30;backdrop-filter:blur(14px);background:rgba(6,5,7,.45);border-bottom:1px solid transparent;transition:.3s}
+nav.scrolled{border-bottom:1px solid var(--line);background:rgba(6,5,7,.7)}
+.nav-in{display:flex;justify-content:space-between;align-items:center;height:66px}
+.logo{font-weight:700;font-size:19px}
+.menu{display:flex;gap:26px;font-size:14.5px;color:var(--tx2)}.menu a{position:relative}.menu a:hover{color:var(--tx)}
+.menu a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--accent);transition:.25s}.menu a:hover::after{width:100%}
+.ncta{border:1px solid var(--line);background:var(--card);padding:9px 17px;border-radius:999px;font-size:14px;font-weight:500;backdrop-filter:blur(8px);transition:.18s}.ncta:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
+@media(max-width:700px){.menu{display:none}}
+header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 24px 70px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(8px);border-radius:999px;padding:8px 16px;font-size:13.5px;color:var(--tx2);margin-bottom:30px}
+.pill .d{width:7px;height:7px;border-radius:50%;background:#5cf08a;box-shadow:0 0 12px #5cf08a;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.4}}
+h1.dis{font-size:clamp(3rem,9vw,7rem);font-weight:700;line-height:.98}
+.grad{background:linear-gradient(120deg,#fff 20%,var(--accent) 55%,#ec4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{max-width:580px;margin:26px auto 0;color:var(--tx2);font-size:clamp(1.05rem,2.3vw,1.28rem);line-height:1.8}
+.hb{margin-top:38px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{padding:15px 30px;border-radius:999px;font-weight:600;font-size:15px;transition:.18s}
+.btn.p{background:var(--tx);color:#111}.btn.p:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,255,255,.18)}
+.btn.g{border:1px solid var(--line);background:var(--card);color:var(--tx);backdrop-filter:blur(8px)}.btn.g:hover{background:rgba(255,255,255,.1)}
+.scroll-cue{margin-top:54px;color:var(--tx2);font-size:12px;letter-spacing:.18em;text-transform:uppercase;animation:bob 2.2s infinite}
+@keyframes bob{50%{transform:translateY(7px);opacity:.5}}
+section{padding:60px 0}
+.panel{background:rgba(10,9,12,.6);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:28px;margin:0 0 24px;padding:44px}
+.ey{font-family:"Space Grotesk";font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.st{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.03em;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr)}
+.stnum{text-align:center;padding:10px;border-right:1px solid var(--line)}
+.stnum:last-child{border:none}
+.stnum .n{font-family:"Space Grotesk";font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:700}
+.stnum .l{color:var(--tx2);font-size:12.5px;margin-top:4px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr);gap:22px 0}}
+.show{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+@media(max-width:860px){.show{grid-template-columns:1fr;gap:30px}}
+.show h2{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:700;letter-spacing:-.03em;line-height:1.12}
+.show p{color:var(--tx2);margin-top:16px;font-size:16px;line-height:1.85}
+.flist{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+.fl{display:flex;gap:12px;align-items:flex-start;font-size:15px}
+.fl .ck{color:var(--accent);font-weight:700;flex:none}
+.devwrap{display:flex;justify-content:center;perspective:1400px}
+.orb{position:relative;width:320px;height:320px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 35%,rgba(255,140,66,.18),rgba(139,92,246,.1) 60%,transparent 72%);
+  border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:0 0 90px rgba(255,140,66,.12),inset 0 0 60px rgba(255,255,255,.04)}
+.orb-ring{position:absolute;inset:24px;border-radius:50%;border:1px dashed rgba(255,255,255,.18);animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.orb-num{font-size:5rem;font-weight:700;line-height:1}
+.orb-lab{font-family:"Space Grotesk";font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2);margin-top:8px}
+.lc{position:absolute;transform:translate(-50%,-50%);font-size:12.5px;color:var(--tx2);background:rgba(10,9,12,.6);border:1px solid var(--line);border-radius:999px;padding:4px 11px;backdrop-filter:blur(6px);white-space:nowrap}
+@media(max-width:860px){.orb{width:260px;height:260px}.orb-num{font-size:4rem}}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:30px}
+.card{border:1px solid var(--line);background:rgba(12,10,16,.6);border-radius:20px;padding:28px;transition:.22s;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(220px circle at var(--mx,50%) var(--my,0),rgba(255,140,66,.14),transparent 70%);opacity:0;transition:.3s}
+.card:hover::before{opacity:1}
+.card:hover{transform:translateY(-4px);border-color:rgba(255,140,66,.4)}
+.card h3{font-size:1.35rem;font-weight:700}
+.card .badge{display:inline-block;font-size:11px;font-weight:700;color:#5cf08a;border:1px solid rgba(92,240,138,.4);border-radius:6px;padding:2px 7px;margin-left:8px;vertical-align:middle}
+.card p{color:#dcd7e8;font-size:14.5px;margin-top:10px;line-height:1.8}
+.tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.tag{border:1px solid var(--line);font-size:12.5px;padding:5px 11px;border-radius:999px;color:var(--tx2)}
+.go{display:inline-block;margin-top:14px;color:var(--accent);font-weight:600;font-size:14px}
+@media(max-width:700px){.cards{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:13px;padding:11px 18px;font-size:14px;transition:.18s}.chip:hover{border-color:var(--accent);color:#fff}
+.closer{text-align:center;padding:120px 24px}
+.closer h2{font-size:clamp(2rem,6vw,3.6rem);font-weight:700}
+footer{text-align:center;color:#e6e2ef;font-size:14px;padding:30px 24px 60px;line-height:2;text-shadow:0 1px 12px rgba(0,0,0,.6)}
+.reveal{transition:.7s cubic-bezier(.2,.7,.2,1)}.js .reveal{opacity:0;transform:translateY(26px)}.reveal.in{opacity:1;transform:none}
+</style></head>
+<body>
+<canvas id="sh"></canvas><div class="noise"></div><div class="scrim"></div><div id="cursor"></div><div id="prog"></div>
+
+<nav id="nav"><div class="wrap nav-in">
+  <div class="logo dis">insightlab</div>
+  <div class="menu"><a href="#flagship">든든 시리즈</a><a href="#work">Work</a><a href="#stack">Stack</a><a href="#about">About</a></div>
+  <a class="ncta" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener">Live ↗</a>
+</div></nav>
+
+<header>
+  <div class="pill reveal"><span class="d"></span>2026 KISA 위치정보 클라우드 지원사업 선정</div>
+  <h1 class="dis reveal">Connecting regions<br>with <span class="grad">data &amp; AI</span>.</h1>
+  <p class="sub reveal">공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오, <b style="color:var(--tx)">인사이트랩</b>. 광주에서 시작해 전국·다국어로.</p>
+  <div class="hb reveal">
+    <a class="btn p" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener">광주든든 둘러보기 ↗</a>
+    <a class="btn g" href="#work">프로젝트 보기</a>
+  </div>
+  <div class="scroll-cue">scroll ↓</div>
+</header>
+
+<div class="wrap">
+  <section><div class="panel reveal"><div class="stats">
+    <div class="stnum"><div class="n dis" data-to="17">17</div><div class="l">앱인토스 미니앱</div></div>
+    <div class="stnum"><div class="n dis" data-to="12">12</div><div class="l">공공데이터 통합</div></div>
+    <div class="stnum"><div class="n dis" data-to="70" data-suffix="+">70<span style="color:var(--accent)">+</span></div><div class="l">실시간 통역 언어</div></div>
+    <div class="stnum"><div class="n dis" data-to="2026">2026</div><div class="l">KISA 선정</div></div>
+  </div></div></section>
+
+  <section id="flagship"><div class="show">
+    <div class="reveal">
+      <div class="ey">Flagship · Live · 광주든든</div>
+      <h2>광주의 모든 것,<br>한 화면에.</h2>
+      <p><b style="color:var(--tx)">광주든든</b>은 카카오맵 위에 공공데이터 12종을 얹은 위치정보 서비스예요. 외국인 방문객을 위한 <b style="color:var(--tx)">Gemini Live 실시간 음성 통역</b>은 말하는 즉시 선택한 언어로 바꿔줍니다.</p>
+      <div class="flist">
+        <div class="fl"><span class="ck">✓</span><span>AI 자연어 검색 · 외출 어드바이저</span></div>
+        <div class="fl"><span class="ck">✓</span><span>실시간 음성 통역 70+개 언어 (베타)</span></div>
+        <div class="fl"><span class="ck">✓</span><span>4단계 환승 알고리즘 · 지하철·버스</span></div>
+      </div>
+      <a class="btn p" style="margin-top:26px;display:inline-block" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener">라이브 사이트 열기 ↗</a>
+    </div>
+    <div class="devwrap reveal">
+      <div class="orb">
+        <div class="orb-ring"></div>
+        <div class="orb-num dis">70<span style="font-size:.5em;color:var(--accent)">+</span></div>
+        <div class="orb-lab">languages · live</div>
+        <span class="lc" style="top:14%;left:50%">한국어</span>
+        <span class="lc" style="top:34%;left:84%">English</span>
+        <span class="lc" style="top:66%;left:82%">中文</span>
+        <span class="lc" style="top:86%;left:50%">日本語</span>
+        <span class="lc" style="top:66%;left:18%">Tiếng Việt</span>
+        <span class="lc" style="top:34%;left:16%">Bahasa</span>
+      </div>
+    </div>
+  </div></section>
+
+  <section id="work">
+    <div class="reveal"><div class="ey">Selected Work</div><div class="st">만들어 온 것들</div></div>
+    <div class="cards" id="cards">
+      <div class="card reveal"><h3>광주든든<span class="badge">LIVE</span></h3><p>광주의 모든 것을 한 화면에 — 공공데이터 12종 통합 위치정보 서비스. AI 자연어 검색·외출 어드바이저·실시간 통역(70+개 언어)·4단계 환승.</p><div class="tags"><span class="tag">KakaoMap</span><span class="tag">OpenAI</span><span class="tag">Gemini Live</span></div><a class="go" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener">라이브 사이트 ↗</a></div>
+      <div class="card reveal"><h3>수출든든</h3><p>"어디에 팔까?" 제품명만 넣으면 AI가 유망 수출국가·거래 안전성·현지정보·맞춤 지원제도를 안내. 5,125개 품목, 바이어 실시간 통역.</p><div class="tags"><span class="tag">AI 추천</span><span class="tag">5,125 품목</span><span class="tag">실시간 통역</span></div></div>
+      <div class="card reveal"><h3>구직든든</h3><p>광주 일자리·훈련·창업지원·청년정책을 한곳에 모은 웹앱(web). 공공 API로 최신 채용·정책을 연동.</p><div class="tags"><span class="tag">웹앱(web)</span><span class="tag">공공 API</span></div></div>
+      <div class="card reveal"><h3>앱인토스 미니앱 17종</h3><p>금은동시세·현장출근부·급여명세서 등 실생활 미니앱을 출시·운영. 토스 플랫폼.</p><div class="tags"><span class="tag">React</span><span class="tag">TDS</span><span class="tag">Toss</span></div></div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="reveal"><div class="ey">Stack</div><div class="st">직접 다루는 기술</div></div>
+    <div class="chips reveal">
+      <span class="chip">React 19</span><span class="chip">TypeScript</span><span class="chip">KakaoMap SDK</span><span class="chip">OpenAI GPT-4o</span><span class="chip">Gemini Live</span><span class="chip">Cloudflare Workers</span><span class="chip">NHN Cloud</span><span class="chip">공공데이터 API</span><span class="chip">Supabase</span>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="panel reveal" style="text-align:center">
+      <div class="ey">About</div>
+      <div class="st">아이디어를 작동하는 서비스로</div>
+      <p style="color:var(--tx2);font-size:16px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto;line-height:1.85">대표 1인이 기획·디자인·개발·운영·배포를 모두 맡는 풀스택 창업 스튜디오. 화려함보다 실제 작동을, 데이터의 한계는 정직하게 — <b style="color:var(--tx)">Built in 광주, scaling nationwide.</b></p>
+    </div>
+  </section>
+</div>
+
+<div class="closer">
+  <h2 class="dis reveal">Let's build<br><span class="grad">something</span>.</h2>
+  <div class="hb reveal" style="justify-content:center"><a class="btn p" href="mailto:mycall98@naver.com">mycall98@naver.com</a></div>
+</div>
+<footer>인사이트랩 · 대표 이현진 · 사업자등록번호 121-32-93146 · 광주광역시 남구<br>© 2026 InsightLab</footer>
+
+<script>
+var c=document.getElementById('sh'),x=c.getContext('2d'),W,H;
+function rs(){W=c.width=innerWidth;H=c.height=innerHeight}rs();addEventListener('resize',rs);
+var cols=[[255,140,66],[139,92,246],[236,72,153],[255,107,107]];
+var pts=cols.map(function(col,i){return{c:col,a:i*1.7,s:.6+i*.12}});
+function draw(t){
+  x.clearRect(0,0,W,H);x.globalCompositeOperation='lighter';
+  try{x.filter='blur(72px)'}catch(e){}
+  pts.forEach(function(p){
+    var px=(0.5+0.42*Math.cos(t*0.00018*p.s+p.a))*W,
+        py=(0.5+0.42*Math.sin(t*0.00022*p.s+p.a*1.3))*H,
+        r=Math.max(W,H)*0.42,
+        g=x.createRadialGradient(px,py,0,px,py,r);
+    g.addColorStop(0,'rgba('+p.c[0]+','+p.c[1]+','+p.c[2]+',0.5)');
+    g.addColorStop(1,'rgba('+p.c[0]+','+p.c[1]+','+p.c[2]+',0)');
+    x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();
+  });
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+var io=new IntersectionObserver(function(e){e.forEach(function(y){if(y.isIntersecting){y.target.classList.add('in');io.unobserve(y.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+var cur=document.getElementById('cursor');
+addEventListener('pointermove',function(e){cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+var nav=document.getElementById('nav'),prog=document.getElementById('prog');
+addEventListener('scroll',function(){
+  var h=document.documentElement,sc=h.scrollTop/(h.scrollHeight-h.clientHeight);
+  prog.style.width=(sc*100)+'%';
+  nav.classList.toggle('scrolled',h.scrollTop>40);
+});
+document.querySelectorAll('.card').forEach(function(card){
+  card.addEventListener('pointermove',function(e){var r=card.getBoundingClientRect();card.style.setProperty('--mx',(e.clientX-r.left)+'px');card.style.setProperty('--my',(e.clientY-r.top)+'px')});
+});
+// count-up stats
+function cnt(el){var to=+el.dataset.to,suf=el.dataset.suffix||'',d=1400,s=null;function f(t){if(!s)s=t;var p=Math.min((t-s)/d,1),e=1-Math.pow(1-p,3),v=Math.round(to*e);el.innerHTML=v+(suf?'<span style="color:var(--accent)">'+suf+'</span>':'');if(p<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
+var co=new IntersectionObserver(function(es){es.forEach(function(y){if(y.isIntersecting){cnt(y.target);co.unobserve(y.target)}})},{threshold:.5});
+document.querySelectorAll('.n[data-to]').forEach(function(el){co.observe(el)});
+</script>
+</body></html>
