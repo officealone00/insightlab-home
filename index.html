@@ -134,59 +134,23 @@ nav.links a:hover{ opacity:1; }
 /* ============================================================
    HERO — THE SIGNAL scroll-scrub
    ============================================================ */
-#hero{ position:relative; height:230vh; }
-.hero-sticky{
-  position:sticky; top:0; height:100vh; overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-}
-.hero-sticky video{
-  position:absolute; inset:0; width:100%; height:100%;
-  object-fit:contain; z-index:0;
-  filter:saturate(1.05) contrast(1.05);
-}
-.hero-veil{
-  position:absolute; inset:0; z-index:1;
-  background:linear-gradient(180deg, rgba(6,5,7,.40), rgba(6,5,7,.30) 42%, rgba(6,5,7,.78)), radial-gradient(130% 95% at 50% 44%, transparent 6%, rgba(6,5,7,.55) 68%, var(--ink) 100%);
-}
-.hero-copy{
-  position:relative; z-index:2; text-align:center;
-  padding:0 clamp(18px,5vw,40px); max-width:1100px;
-}
-.kicker{
-  font-family:var(--font-mono); font-size:clamp(10px,1.4vw,13px);
-  letter-spacing:.22em; text-transform:uppercase; color:var(--mut);
-  display:inline-flex; align-items:center; gap:9px; margin-bottom:22px;
-}
+#hero{ position:relative; z-index:2; padding:150px 0 72px; }
+.hero-inner{ max-width:1120px; margin:0 auto; padding:0 clamp(18px,5vw,24px); text-align:center; }
+.kicker{ font-family:var(--font-mono); font-size:clamp(10px,1.4vw,13px); letter-spacing:.22em; text-transform:uppercase; color:var(--mut); display:inline-flex; align-items:center; gap:9px; margin-bottom:22px; }
 .dot{ width:8px; height:8px; border-radius:50%; background:#37d67a; box-shadow:0 0 10px #37d67a; animation:pulse 1.8s infinite; }
 @keyframes pulse{ 50%{ opacity:.35; transform:scale(.8);} }
-.hero-copy h1{
-  font-family:var(--font-display); font-weight:700;
-  font-size:clamp(38px,8vw,104px); line-height:.98; letter-spacing:-.02em;
-  text-shadow:0 2px 26px rgba(0,0,0,.6), 0 1px 3px rgba(0,0,0,.55);
-  margin-bottom:24px;
-}
-.hero-copy h1 .l{ display:inline-block; opacity:0; transform:translateY(22px); }
-.hero-sub{
-  font-size:clamp(14px,2vw,19px); color:var(--cream); opacity:.95; text-shadow:0 1px 12px rgba(0,0,0,.65);
-  max-width:640px; margin:0 auto 34px; line-height:1.85;
-}
+.hero-inner h1{ font-family:var(--font-display); font-weight:700; font-size:clamp(2.4rem,6.5vw,5rem); line-height:1.0; letter-spacing:-.02em; margin-bottom:22px; }
+.hero-inner h1 .l{ display:inline-block; opacity:0; transform:translateY(22px); }
+.hero-sub{ font-size:clamp(15px,2vw,19px); color:var(--cream); opacity:.9; max-width:640px; margin:0 auto 34px; line-height:1.85; }
 .hero-cta{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
-.btn{
-  font-family:var(--font-mono); font-size:13px; letter-spacing:.04em;
-  padding:14px 24px; border-radius:100px; border:1px solid var(--line);
-  transition:transform .2s, background .2s, border-color .2s; will-change:transform;
-}
+.btn{ font-family:var(--font-mono); font-size:13px; letter-spacing:.04em; padding:14px 24px; border-radius:100px; border:1px solid var(--line); transition:transform .2s, background .2s, border-color .2s; will-change:transform; }
 .btn.primary{ background:var(--grad); color:#180a02; font-weight:700; border-color:transparent; }
 .btn.primary:hover{ transform:translateY(-3px) scale(1.02); }
 .btn.ghost{ color:var(--cream); }
 .btn.ghost:hover{ border-color:var(--orange); transform:translateY(-3px); }
-.scroll-hint{
-  position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:2;
-  font-family:var(--font-mono); font-size:10px; letter-spacing:.3em; color:var(--mut2);
-  text-transform:uppercase;
-}
-.scroll-hint::after{ content:""; display:block; width:1px; height:34px; margin:10px auto 0; background:linear-gradient(var(--mut2), transparent); animation:drop 1.8s infinite; }
-@keyframes drop{ 0%{opacity:0; transform:translateY(-8px);} 50%{opacity:1;} 100%{opacity:0; transform:translateY(8px);} }
+.hero-media{ max-width:1000px; margin:48px auto 0; border-radius:20px; overflow:hidden; aspect-ratio:16/9; border:1px solid var(--line); box-shadow:0 30px 90px rgba(0,0,0,.55); background:#000; }
+.hero-media video{ width:100%; height:100%; object-fit:cover; display:block; }
+@media(max-width:720px){ #hero{ padding:118px 0 48px; } .hero-media{ margin-top:32px; border-radius:14px; } }
 
 /* ============================================================
    Section shell
@@ -307,22 +271,19 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 
 <!-- HERO — THE SIGNAL -->
 <section id="hero">
-  <div class="hero-sticky">
-    <video id="signalVid" autoplay muted playsinline preload="auto"
-           poster="assets/the_signal_hero.png">
-      <source src="assets/the_signal.mp4" type="video/mp4" />
-    </video>
-    <div class="hero-veil"></div>
-    <div class="hero-copy">
-      <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
-      <h1 class="disp" id="heroHead"></h1>
-      <p class="hero-sub kr">공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오, 인사이트랩. 광주에서 시작해 전국·다국어로.</p>
-      <div class="hero-cta">
-        <a class="btn primary" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener" data-cursor>광주든든 둘러보기 ↗</a>
-        <a class="btn ghost" href="#work" data-scroll data-cursor>프로젝트 보기</a>
-      </div>
+  <div class="hero-inner">
+    <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
+    <h1 class="disp" id="heroHead"></h1>
+    <p class="hero-sub kr">공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오, 인사이트랩. 광주에서 시작해 전국·다국어로.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener" data-cursor>광주든든 둘러보기 ↗</a>
+      <a class="btn ghost" href="#work" data-scroll data-cursor>프로젝트 보기</a>
     </div>
-    <div class="scroll-hint mono">SCROLL</div>
+    <div class="hero-media">
+      <video id="signalVid" autoplay muted loop playsinline preload="auto" poster="assets/the_signal_hero.png">
+        <source src="assets/the_signal.mp4" type="video/mp4" />
+      </video>
+    </div>
   </div>
 </section>
 
@@ -339,7 +300,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 <!-- FLAGSHIP — 광주든든 (over THE BUILD clip) -->
 <section class="block" id="flagship">
   <div class="flag-video">
-    <video id="buildVid" muted playsinline loop preload="auto"
+    <video id="buildVid" autoplay muted loop playsinline preload="auto"
            poster="assets/the_signal_hero.png">
       <source src="assets/the_build.mp4" type="video/mp4" />
     </video>
@@ -510,20 +471,9 @@ addEventListener('scroll', updProg, {passive:true}); updProg();
   }));
 })();
 
-/* ---------- HERO scroll-scrub (bootstrap-load, then seek on scroll) ---------- */
+/* ---------- HERO video: autoplay loop (contained) ---------- */
 const sig = document.getElementById('signalVid');
-const heroSec = document.getElementById('hero');
-let vdur=0, targetT=0, curT=0, scrubReady=false;
-if (sig){
-  sig.muted = true;
-  const onData=()=>{ vdur=sig.duration||0; sig.pause(); scrubReady=true; };
-  sig.addEventListener('loadeddata', onData);
-  sig.play().catch(()=>{});          // bootstrap the download so it can be seeked
-  if (sig.readyState>=2) onData();
-  const compute=()=>{ const r=heroSec.getBoundingClientRect(); const total=heroSec.offsetHeight-innerHeight; const pr=Math.min(1,Math.max(0,-r.top/(total||1))); targetT=pr*Math.max(0,vdur-0.05); };
-  addEventListener('scroll', compute, {passive:true}); compute();
-  (function tick(){ if(scrubReady){ curT+=(targetT-curT)*0.15; if(Math.abs(sig.currentTime-curT)>0.01){ try{ if(!sig.paused) sig.pause(); sig.currentTime=curT; }catch(e){} } } requestAnimationFrame(tick); })();
-}
+if (sig){ sig.muted=true; const kick=()=>sig.play().catch(()=>{}); kick(); sig.addEventListener('canplay',kick,{once:true}); document.addEventListener('touchstart',kick,{once:true,passive:true}); document.addEventListener('click',kick,{once:true}); }
 
 /* ---------- Reveal on scroll ---------- */
 const io = new IntersectionObserver((es)=>{
