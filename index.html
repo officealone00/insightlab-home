@@ -510,13 +510,16 @@ addEventListener('scroll', updProg, {passive:true}); updProg();
   }));
 })();
 
-/* ---------- HERO scroll-scrub (eased = smooth) ---------- */
+/* ---------- HERO scroll-scrub (tiny file, buffered, eased) ---------- */
 const sig = document.getElementById('signalVid');
 const heroSec = document.getElementById('hero');
 let vdur=0, targetT=0, curT=0;
 if (sig){
-  sig.pause();
-  sig.addEventListener('loadedmetadata', ()=>{ vdur = sig.duration||0; });
+  sig.muted = true; sig.preload = 'auto';
+  const onMeta = ()=>{ vdur = sig.duration||0; };
+  sig.addEventListener('loadedmetadata', onMeta);
+  sig.load();                         // force the (tiny) file to download & decode
+  if (sig.readyState >= 1) onMeta();
   const computeTarget = ()=>{
     const rect = heroSec.getBoundingClientRect();
     const total = heroSec.offsetHeight - innerHeight;
@@ -524,7 +527,7 @@ if (sig){
     targetT = pr * Math.max(0, vdur-0.05);
   };
   addEventListener('scroll', computeTarget, {passive:true}); computeTarget();
-  (function tick(){ curT += (targetT-curT)*0.12; if(vdur && Math.abs(sig.currentTime-curT)>0.015){ try{sig.currentTime=curT;}catch(e){} } requestAnimationFrame(tick); })();
+  (function tick(){ curT += (targetT-curT)*0.15; if(vdur && Math.abs(sig.currentTime-curT)>0.01){ try{ sig.pause(); sig.currentTime=curT; }catch(e){} } requestAnimationFrame(tick); })();
 }
 
 /* ---------- Reveal on scroll ---------- */
