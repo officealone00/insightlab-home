@@ -600,4 +600,15 @@ new IntersectionObserver((es)=>{
 
 /* ---------- Card tilt + glow ---------- */
 document.querySelectorAll('[data-tilt]').forEach(card=>{
-  card.addEv
+  card.addEventListener('mousemove', e=>{
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+    card.style.transform = `perspective(800px) rotateY(${(px-.5)*7}deg) rotateX(${(0.5-py)*7}deg) translateY(-4px)`;
+    card.style.setProperty('--mx', (px*100)+'%');
+    card.style.setProperty('--my', (py*100)+'%');
+  });
+  card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
+});
+</script>
+</body>
+</html>
