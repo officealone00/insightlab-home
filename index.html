@@ -134,12 +134,25 @@ nav.links a:hover{ opacity:1; }
 /* ============================================================
    HERO — THE SIGNAL scroll-scrub
    ============================================================ */
-#hero{ position:relative; z-index:2; padding:150px 0 72px; }
-.hero-inner{ max-width:1120px; margin:0 auto; padding:0 clamp(18px,5vw,24px); text-align:center; }
+#hero{
+  position:relative; z-index:2;
+  min-height:100svh;
+  display:flex; align-items:center; justify-content:center;
+  padding:110px 0 90px;
+  overflow:hidden;
+}
+/* 히어로 풀스크린 배경 영상 */
+.hero-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; will-change:transform; transform:scale(1.06); }
+.hero-bg video{ width:100%; height:100%; object-fit:cover; }
+.hero-bg::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(6,5,7,.78) 0%, rgba(6,5,7,.42) 45%, rgba(6,5,7,.92) 100%);
+}
+.hero-inner{ position:relative; z-index:2; max-width:1120px; margin:0 auto; padding:0 clamp(18px,5vw,24px); text-align:center; will-change:transform,opacity; }
 .kicker{ font-family:var(--font-mono); font-size:clamp(10px,1.4vw,13px); letter-spacing:.22em; text-transform:uppercase; color:var(--mut); display:inline-flex; align-items:center; gap:9px; margin-bottom:22px; }
 .dot{ width:8px; height:8px; border-radius:50%; background:#37d67a; box-shadow:0 0 10px #37d67a; animation:pulse 1.8s infinite; }
 @keyframes pulse{ 50%{ opacity:.35; transform:scale(.8);} }
-.hero-inner h1{ font-family:var(--font-display); font-weight:700; font-size:clamp(2.4rem,6.5vw,5rem); line-height:1.0; letter-spacing:-.02em; margin-bottom:22px; }
+.hero-inner h1{ font-family:var(--font-display); font-weight:700; font-size:clamp(2.4rem,6vw,4.8rem); line-height:1.04; letter-spacing:-.02em; margin-bottom:22px; text-shadow:0 4px 44px rgba(0,0,0,.55); }
 .hero-inner h1 .l{ display:inline-block; opacity:0; transform:translateY(22px); }
 .hero-sub{ font-size:clamp(15px,2vw,19px); color:var(--cream); opacity:.9; max-width:640px; margin:0 auto 34px; line-height:1.85; }
 .hero-cta{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
@@ -148,9 +161,16 @@ nav.links a:hover{ opacity:1; }
 .btn.primary:hover{ transform:translateY(-3px) scale(1.02); }
 .btn.ghost{ color:var(--cream); }
 .btn.ghost:hover{ border-color:var(--orange); transform:translateY(-3px); }
-.hero-media{ max-width:1000px; margin:48px auto 0; border-radius:20px; overflow:hidden; aspect-ratio:16/9; border:1px solid var(--line); box-shadow:0 30px 90px rgba(0,0,0,.55); background:#000; }
-.hero-media video{ width:100%; height:100%; object-fit:cover; display:block; }
-@media(max-width:720px){ #hero{ padding:118px 0 48px; } .hero-media{ margin-top:32px; border-radius:14px; } }
+.hero-sub{ text-shadow:0 2px 24px rgba(0,0,0,.6); }
+.scroll-hint{
+  position:absolute; left:50%; bottom:26px; transform:translateX(-50%); z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.22em; color:var(--mut);
+}
+.scroll-hint .bar{ width:1px; height:34px; background:linear-gradient(180deg,var(--orange),transparent); animation:drop 1.6s infinite; }
+@keyframes drop{ 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+@media(max-width:720px){ #hero{ padding:96px 0 70px; } }
+@media (prefers-reduced-motion: reduce){ .hero-bg,.hero-inner{ transform:none !important; opacity:1 !important; } }
 
 /* ============================================================
    Section shell
@@ -271,7 +291,12 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 
 <!-- HERO — THE SIGNAL -->
 <section id="hero">
-  <div class="hero-inner">
+  <div class="hero-bg" id="heroBg">
+    <video id="signalVid" autoplay muted loop playsinline preload="auto" poster="assets/the_signal_hero.png">
+      <source src="assets/the_signal.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="hero-inner" id="heroInner">
     <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
     <h1 class="disp" id="heroHead"></h1>
     <p class="hero-sub kr">공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오, 인사이트랩. 광주에서 시작해 전국·다국어로.</p>
@@ -279,12 +304,8 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
       <a class="btn primary" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener" data-cursor>광주든든 둘러보기 ↗</a>
       <a class="btn ghost" href="#work" data-scroll data-cursor>프로젝트 보기</a>
     </div>
-    <div class="hero-media">
-      <video id="signalVid" autoplay muted loop playsinline preload="auto" poster="assets/the_signal_hero.png">
-        <source src="assets/the_signal.mp4" type="video/mp4" />
-      </video>
-    </div>
   </div>
+  <div class="scroll-hint">SCROLL<span class="bar"></span></div>
 </section>
 
 <!-- STATS -->
@@ -474,6 +495,27 @@ addEventListener('scroll', updProg, {passive:true}); updProg();
 /* ---------- HERO video: autoplay loop (contained) ---------- */
 const sig = document.getElementById('signalVid');
 if (sig){ sig.muted=true; const kick=()=>sig.play().catch(()=>{}); kick(); sig.addEventListener('canplay',kick,{once:true}); document.addEventListener('touchstart',kick,{once:true,passive:true}); document.addEventListener('click',kick,{once:true}); }
+
+/* ---------- HERO 패럴랙스: 휠 내리면 텍스트는 위로, 영상은 느리게 ---------- */
+(function(){
+  const inner = document.getElementById('heroInner');
+  const bg = document.getElementById('heroBg');
+  if(!inner || !bg) return;
+  let vh = innerHeight, ticking = false;
+  addEventListener('resize', ()=>{ vh = innerHeight; }, {passive:true});
+  function apply(){
+    const y = scrollY;
+    if (y < vh * 1.2){
+      const p = Math.min(y / vh, 1);
+      inner.style.transform = `translateY(${-y * 0.45}px)`;          // 텍스트 위로
+      inner.style.opacity = Math.max(0, 1 - p * 1.2).toFixed(3);      // 서서히 페이드
+      bg.style.transform = `translateY(${y * 0.28}px) scale(${1.06 + p * 0.05})`; // 영상은 느리게 + 확대
+    }
+    ticking = false;
+  }
+  addEventListener('scroll', ()=>{ if(!ticking){ requestAnimationFrame(apply); ticking = true; } }, {passive:true});
+  apply();
+})();
 
 /* ---------- Reveal on scroll ---------- */
 const io = new IntersectionObserver((es)=>{
