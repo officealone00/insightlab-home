@@ -51,7 +51,6 @@ body{
   line-height:1.8;
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
-  cursor:none;
 }
 /* Korean readability — standing rule */
 p, li, h1, h2, h3, h4, .kr{
@@ -99,6 +98,7 @@ img, video{ display:block; max-width:100%; }
 @keyframes float2{ 50%{ transform:translate(-7vw,-5vh) scale(1.1);} }
 
 #cursor{
+  display:none;
   position:fixed; top:0; left:0; z-index:9999; pointer-events:none;
   width:26px; height:26px; margin:-13px 0 0 -13px; border-radius:50%;
   border:1px solid rgba(255,140,66,.7);
@@ -144,7 +144,7 @@ nav.links a:hover{ opacity:1; }
 }
 .hero-veil{
   position:absolute; inset:0; z-index:1;
-  background:radial-gradient(120% 80% at 50% 40%, transparent 30%, rgba(6,5,7,.65) 78%, var(--ink) 100%);
+  background:linear-gradient(180deg, rgba(6,5,7,.40), rgba(6,5,7,.30) 42%, rgba(6,5,7,.78)), radial-gradient(130% 95% at 50% 44%, transparent 6%, rgba(6,5,7,.55) 68%, var(--ink) 100%);
 }
 .hero-copy{
   position:relative; z-index:2; text-align:center;
@@ -160,11 +160,12 @@ nav.links a:hover{ opacity:1; }
 .hero-copy h1{
   font-family:var(--font-display); font-weight:700;
   font-size:clamp(38px,8vw,104px); line-height:.98; letter-spacing:-.02em;
+  text-shadow:0 2px 26px rgba(0,0,0,.6), 0 1px 3px rgba(0,0,0,.55);
   margin-bottom:24px;
 }
 .hero-copy h1 .l{ display:inline-block; opacity:0; transform:translateY(22px); }
 .hero-sub{
-  font-size:clamp(14px,2vw,19px); color:var(--cream); opacity:.82;
+  font-size:clamp(14px,2vw,19px); color:var(--cream); opacity:.95; text-shadow:0 1px 12px rgba(0,0,0,.65);
   max-width:640px; margin:0 auto 34px; line-height:1.85;
 }
 .hero-cta{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
