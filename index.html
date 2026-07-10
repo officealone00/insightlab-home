@@ -136,7 +136,11 @@ nav.links a:hover{ opacity:1; }
    ============================================================ */
 #hero{
   position:relative; z-index:2;
-  min-height:100svh;
+  height:280vh;              /* 스크롤 스크럽 구간: 이 길이만큼 스크롤하는 동안 영상이 재생됨 */
+}
+.hero-sticky{
+  position:sticky; top:0;
+  height:100svh;
   display:flex; align-items:center; justify-content:center;
   padding:110px 0 90px;
   overflow:hidden;
@@ -169,7 +173,7 @@ nav.links a:hover{ opacity:1; }
 }
 .scroll-hint .bar{ width:1px; height:34px; background:linear-gradient(180deg,var(--orange),transparent); animation:drop 1.6s infinite; }
 @keyframes drop{ 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
-@media(max-width:720px){ #hero{ padding:96px 0 70px; } }
+@media(max-width:720px){ #hero{ height:240vh; } .hero-sticky{ padding:96px 0 70px; } }
 @media (prefers-reduced-motion: reduce){ .hero-bg,.hero-inner{ transform:none !important; opacity:1 !important; } }
 
 /* ============================================================
@@ -291,9 +295,10 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 
 <!-- HERO — THE SIGNAL -->
 <section id="hero">
+  <div class="hero-sticky">
   <div class="hero-bg" id="heroBg">
-    <video id="signalVid" autoplay muted loop playsinline preload="auto" poster="assets/the_signal_hero.png">
-      <source src="assets/the_signal.mp4" type="video/mp4" />
+    <video id="signalVid" muted playsinline preload="auto" poster="assets/the_signal_hero.png">
+      <source src="assets/the_signal_scrub.mp4" type="video/mp4" />
     </video>
   </div>
   <div class="hero-inner" id="heroInner">
@@ -306,6 +311,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
     </div>
   </div>
   <div class="scroll-hint">SCROLL<span class="bar"></span></div>
+  </div><!-- /.hero-sticky -->
 </section>
 
 <!-- STATS -->
@@ -492,29 +498,53 @@ addEventListener('scroll', updProg, {passive:true}); updProg();
   }));
 })();
 
-/* ---------- HERO video: autoplay loop (contained) ---------- */
+/* ---------- HERO video: 스크롤 스크럽 (스크롤 내리면 영상이 재생됨) ---------- */
 const sig = document.getElementById('signalVid');
-if (sig){ sig.muted=true; const kick=()=>sig.play().catch(()=>{}); kick(); sig.addEventListener('canplay',kick,{once:true}); document.addEventListener('touchstart',kick,{once:true,passive:true}); document.addEventListener('click',kick,{once:true}); }
 
-/* ---------- HERO 패럴랙스: 휠 내리면 텍스트는 위로, 영상은 느리게 ---------- */
+/* ---------- HERO 스크롤 스크럽: 스크롤 진행도 = 영상 재생 위치 ---------- */
 (function(){
+  const hero = document.getElementById('hero');
   const inner = document.getElementById('heroInner');
-  const bg = document.getElementById('heroBg');
-  if(!inner || !bg) return;
-  let vh = innerHeight, ticking = false;
-  addEventListener('resize', ()=>{ vh = innerHeight; }, {passive:true});
-  function apply(){
-    const y = scrollY;
-    if (y < vh * 1.2){
-      const p = Math.min(y / vh, 1);
-      inner.style.transform = `translateY(${-y * 0.45}px)`;          // 텍스트 위로
-      inner.style.opacity = Math.max(0, 1 - p * 1.2).toFixed(3);      // 서서히 페이드
-      bg.style.transform = `translateY(${y * 0.28}px) scale(${1.06 + p * 0.05})`; // 영상은 느리게 + 확대
-    }
-    ticking = false;
+  if(!hero || !sig) return;
+
+  let duration = 0, targetT = 0, currentT = 0, scrubbing = false;
+
+  function ready(){
+    duration = sig.duration || 0;
+    if(!duration) return;
+    sig.pause();               // 자동재생 대신 스크롤이 재생을 담당
+    scrubbing = true;
+    onScrollScrub();
   }
-  addEventListener('scroll', ()=>{ if(!ticking){ requestAnimationFrame(apply); ticking = true; } }, {passive:true});
-  apply();
+  if (sig.readyState >= 1) ready();
+  else sig.addEventListener('loadedmetadata', ready, {once:true});
+  // 메타데이터를 3초 안에 못 받으면(예: 모바일 절전) 그냥 일반 재생으로 폴백
+  setTimeout(()=>{ if(!scrubbing){ sig.loop = true; sig.play().catch(()=>{}); } }, 3000);
+
+  function progress(){
+    const total = hero.offsetHeight - innerHeight;   // 스크럽 가능한 스크롤 길이
+    const y = Math.min(Math.max(-hero.getBoundingClientRect().top, 0), total);
+    return total > 0 ? y / total : 0;
+  }
+
+  function onScrollScrub(){
+    const p = progress();
+    if (scrubbing && duration) targetT = p * (duration - 0.08);
+    // 텍스트: 후반 40% 구간에서 위로 올라가며 페이드
+    const tp = Math.max(0, (p - 0.6) / 0.4);
+    inner.style.transform = `translateY(${-tp * 120}px)`;
+    inner.style.opacity = (1 - tp).toFixed(3);
+  }
+  addEventListener('scroll', onScrollScrub, {passive:true});
+
+  // currentTime을 부드럽게 따라가게 (덜컹거림 방지)
+  (function loop(){
+    if (scrubbing && duration && Math.abs(targetT - currentT) > 0.001){
+      currentT += (targetT - currentT) * 0.14;
+      try{ sig.currentTime = currentT; }catch(e){}
+    }
+    requestAnimationFrame(loop);
+  })();
 })();
 
 /* ---------- Reveal on scroll ---------- */
