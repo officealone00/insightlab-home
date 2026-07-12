@@ -146,8 +146,16 @@ nav.links a:hover{ opacity:1; }
   overflow:hidden;
 }
 /* 히어로 풀스크린 배경 영상 */
-.hero-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; will-change:transform; transform:scale(1.06); }
-.hero-bg video{ width:100%; height:100%; object-fit:cover; }
+.hero-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; will-change:transform,border-radius; transform:scale(1.06);
+  background:url("assets/the_signal_hero.png") center/cover no-repeat; overflow:hidden; }
+.hero-bg canvas{ width:100%; height:100%; display:block; }
+/* 스크롤 진행 인디케이터 (우측) */
+.hero-ticks{ position:absolute; right:clamp(14px,3vw,40px); top:50%; transform:translateY(-50%); z-index:2;
+  display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+.hero-ticks .t{ width:14px; height:1px; background:rgba(245,243,247,.18); transition:background .2s, width .2s; }
+.hero-ticks .t.on{ background:var(--orange); width:22px; }
+.hero-ticks .lbl{ font-family:var(--font-mono); font-size:10px; letter-spacing:.14em; color:var(--mut); margin-top:10px; }
+@media(max-width:720px){ .hero-ticks{ display:none; } }
 .hero-bg::after{
   content:""; position:absolute; inset:0;
   background:linear-gradient(180deg, rgba(6,5,7,.78) 0%, rgba(6,5,7,.42) 45%, rgba(6,5,7,.92) 100%);
@@ -179,13 +187,13 @@ nav.links a:hover{ opacity:1; }
 /* ============================================================
    Section shell
    ============================================================ */
-section.block{ position:relative; z-index:2; padding:clamp(80px,12vh,150px) clamp(18px,6vw,90px); }
+section.block{ position:relative; z-index:2; padding:clamp(56px,9vh,100px) clamp(18px,6vw,90px); }
 .eyebrow{
   font-family:var(--font-mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase;
   color:var(--orange); margin-bottom:18px; display:flex; align-items:center; gap:10px;
 }
 .eyebrow::before{ content:""; width:26px; height:1px; background:var(--orange); }
-.h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(28px,5vw,58px); line-height:1.04; letter-spacing:-.015em; margin-bottom:18px; }
+.h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(24px,3.8vw,42px); line-height:1.06; letter-spacing:-.015em; margin-bottom:16px; }
 .lead{ font-size:clamp(15px,1.8vw,18px); color:var(--mut); max-width:620px; line-height:1.85; }
 
 .reveal{ opacity:0; transform:translateY(34px); transition:opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); }
@@ -194,7 +202,7 @@ section.block{ position:relative; z-index:2; padding:clamp(80px,12vh,150px) clam
 /* STATS */
 #stats{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
 .stat-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(20px,4vw,50px); }
-.stat h3{ font-family:var(--font-display); font-weight:700; font-size:clamp(40px,7vw,84px); line-height:1; }
+.stat h3{ font-family:var(--font-display); font-weight:700; font-size:clamp(32px,4.5vw,54px); line-height:1; }
 .stat p{ font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; color:var(--mut); margin-top:12px; text-transform:uppercase; }
 .stat .suffix{ -webkit-text-fill-color:var(--orange); color:var(--orange); }
 @media(max-width:820px){ .stat-grid{ grid-template-columns:repeat(2,1fr); gap:36px 20px; } }
@@ -252,7 +260,7 @@ section.block{ position:relative; z-index:2; padding:clamp(80px,12vh,150px) clam
 #stack{ padding:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; }
 .marquee{ display:flex; gap:0; white-space:nowrap; padding:26px 0; }
 .marquee .track{ display:flex; gap:44px; padding-right:44px; animation:scrollx 26s linear infinite; }
-.marquee span{ font-family:var(--font-display); font-weight:600; font-size:clamp(20px,3vw,34px); opacity:.5; }
+.marquee span{ font-family:var(--font-display); font-weight:600; font-size:clamp(17px,2.2vw,26px); opacity:.5; }
 .marquee span.on{ opacity:1; }
 .marquee .sep{ color:var(--orange); }
 @keyframes scrollx{ to{ transform:translateX(-100%); } }
@@ -264,7 +272,7 @@ section.block{ position:relative; z-index:2; padding:clamp(80px,12vh,150px) clam
 
 /* FINALE */
 #finale{ text-align:center; padding:clamp(100px,18vh,200px) 18px; }
-#finale h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(40px,10vw,120px); line-height:1; letter-spacing:-.02em; margin-bottom:34px; }
+#finale h2{ font-family:var(--font-display); font-weight:700; font-size:clamp(34px,7vw,84px); line-height:1; letter-spacing:-.02em; margin-bottom:30px; }
 .finale-cta{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 
 /* FOOTER */
@@ -288,6 +296,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
   <nav class="links">
     <a href="#flagship" data-scroll>FLAGSHIP</a>
     <a href="#work" data-scroll>WORK</a>
+    <a href="#lab" data-scroll>LAB</a>
     <a href="#about" data-scroll>ABOUT</a>
     <a href="#finale" data-scroll>CONTACT</a>
   </nav>
@@ -297,9 +306,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 <section id="hero">
   <div class="hero-sticky">
   <div class="hero-bg" id="heroBg">
-    <video id="signalVid" muted playsinline preload="auto" poster="assets/the_signal_hero.png">
-      <source src="assets/the_signal_scrub.mp4" type="video/mp4" />
-    </video>
+    <canvas id="heroCanvas"></canvas>
   </div>
   <div class="hero-inner" id="heroInner">
     <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
@@ -311,6 +318,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
     </div>
   </div>
   <div class="scroll-hint">SCROLL<span class="bar"></span></div>
+  <div class="hero-ticks" id="heroTicks"></div>
   </div><!-- /.hero-sticky -->
 </section>
 
@@ -391,6 +399,42 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
       <p class="kr">금은동시세 · 현장출근부 · 급여명세서 등 실사용 미니앱을 토스 플랫폼 위에서.</p>
       <div class="meta">토스 미니앱 · TypeScript · 공공데이터 API</div>
     </article>
+  </div>
+</section>
+
+
+<!-- LAB -->
+<section class="block" id="lab">
+  <div class="reveal">
+    <div class="eyebrow">Lab</div>
+    <h2 class="h2">터미널군 랩 — 갖고 놀 수 있는 브랜드.</h2>
+    <p class="lead kr">인사이트랩의 마스코트 터미널군으로 만든 인터랙티브 실험실. 전부 파일 하나짜리 웹앱입니다.</p>
+  </div>
+  <div class="work-grid">
+    <a class="card reveal" data-tilt data-cursor href="goods.html">
+      <span class="num">L1</span><span class="tag live">NEW</span>
+      <h3 class="disp">터미널군 굿즈 랩</h3>
+      <p class="kr">티셔츠 디자인 4종 × 색상 7종 × 표정 프린트 5종 — 실제 목업으로 나만의 조합을 만들어보세요.</p>
+      <div class="meta">CONFIGURATOR · 140 COMBINATIONS</div>
+    </a>
+    <a class="card reveal" data-tilt data-cursor href="puzzle.html">
+      <span class="num">L2</span>
+      <h3 class="disp">터미널군 퍼즐</h3>
+      <p class="kr">슬라이딩 퍼즐로 터미널군을 완성해보세요. 내 사진을 드래그하면 그 이미지로 퍼즐이 다시 만들어집니다.</p>
+      <div class="meta">GAME · 3×3 SLIDING PUZZLE</div>
+    </a>
+    <a class="card reveal" data-tilt data-cursor href="club.html">
+      <span class="num">L3</span>
+      <h3 class="disp">터미널군 클럽</h3>
+      <p class="kr">포인트 적립 · 티어 승급 · 리워드 교환까지, 멤버십 데모를 직접 체험해보세요.</p>
+      <div class="meta">LOYALTY · GUEST → ROOT</div>
+    </a>
+    <a class="card reveal" data-tilt data-cursor href="showreel.html">
+      <span class="num">L4</span>
+      <h3 class="disp">제품 쇼릴</h3>
+      <p class="kr">인사이트랩 제품 5종이 자동으로 흐르는 디스플레이 루프 — 전체화면으로 보세요.</p>
+      <div class="meta">SHOWREEL · AUTO LOOP</div>
+    </a>
   </div>
 </section>
 
@@ -498,50 +542,99 @@ addEventListener('scroll', updProg, {passive:true}); updProg();
   }));
 })();
 
-/* ---------- HERO video: 스크롤 스크럽 (스크롤 내리면 영상이 재생됨) ---------- */
-const sig = document.getElementById('signalVid');
-
-/* ---------- HERO 스크롤 스크럽: 스크롤 진행도 = 영상 재생 위치 ---------- */
+/* ---------- HERO 스크롤 스크럽: 프레임 시퀀스(canvas) 방식 ----------
+   <video> 재생이 막힌 환경에서도 확실히 동작. 스크롤 진행도 → 프레임 번호. */
 (function(){
   const hero = document.getElementById('hero');
   const inner = document.getElementById('heroInner');
-  if(!hero || !sig) return;
+  const canvas = document.getElementById('heroCanvas');
+  if(!hero || !inner || !canvas) return;
+  const ctx = canvas.getContext('2d');
 
-  let duration = 0, targetT = 0, currentT = 0, scrubbing = false;
+  const N = 97;                              // assets/frames/f_001.jpg ~ f_097.jpg
+  const frames = new Array(N);
+  const loaded = new Array(N).fill(false);
+  const src = i => 'assets/frames/f_' + String(i+1).padStart(3,'0') + '.webp';
 
-  function ready(){
-    duration = sig.duration || 0;
-    if(!duration) return;
-    sig.pause();               // 자동재생 대신 스크롤이 재생을 담당
-    scrubbing = true;
-    onScrollScrub();
+  function loadFrame(i){
+    if (frames[i]) return;
+    const img = new Image();
+    img.onload = ()=>{ loaded[i] = true; if(i===0) draw(0); };
+    img.src = src(i);
+    frames[i] = img;
   }
-  if (sig.readyState >= 1) ready();
-  else sig.addEventListener('loadedmetadata', ready, {once:true});
-  // 메타데이터를 3초 안에 못 받으면(예: 모바일 절전) 그냥 일반 재생으로 폴백
-  setTimeout(()=>{ if(!scrubbing){ sig.loop = true; sig.play().catch(()=>{}); } }, 3000);
+  // 1번 프레임 먼저, 나머지는 백그라운드에서 순차 로드
+  loadFrame(0);
+  let qi = 1;
+  (function queue(){
+    for(let k=0; k<6 && qi<N; k++, qi++) loadFrame(qi);
+    if (qi < N) setTimeout(queue, 120);
+  })();
+
+  function resize(){
+    canvas.width = canvas.clientWidth * Math.min(devicePixelRatio||1, 2);
+    canvas.height = canvas.clientHeight * Math.min(devicePixelRatio||1, 2);
+    draw(lastIdx);
+  }
+  addEventListener('resize', resize, {passive:true});
+
+  function nearestLoaded(i){
+    if (loaded[i]) return i;
+    for(let d=1; d<N; d++){
+      if (i-d>=0 && loaded[i-d]) return i-d;
+      if (i+d<N && loaded[i+d]) return i+d;
+    }
+    return -1;
+  }
+
+  let lastIdx = 0;
+  function draw(i){
+    const j = nearestLoaded(i);
+    if (j < 0) return;
+    lastIdx = j;
+    const img = frames[j];
+    const cw = canvas.width, ch = canvas.height;
+    // cover 계산
+    const s = Math.max(cw/img.width, ch/img.height);
+    const w = img.width*s, h = img.height*s;
+    ctx.drawImage(img, (cw-w)/2, (ch-h)/2, w, h);
+  }
 
   function progress(){
-    const total = hero.offsetHeight - innerHeight;   // 스크럽 가능한 스크롤 길이
+    const total = hero.offsetHeight - innerHeight;
     const y = Math.min(Math.max(-hero.getBoundingClientRect().top, 0), total);
     return total > 0 ? y / total : 0;
   }
 
-  function onScrollScrub(){
+  // 스크롤 진행 인디케이터 생성
+  const ticksWrap = document.getElementById('heroTicks');
+  const TICKS = 40; const tickEls = [];
+  if (ticksWrap){
+    for(let i=0;i<TICKS;i++){ const d=document.createElement('div'); d.className='t'; ticksWrap.appendChild(d); tickEls.push(d); }
+    const lbl=document.createElement('div'); lbl.className='lbl'; lbl.textContent='00 / '+N; ticksWrap.appendChild(lbl);
+    ticksWrap._lbl = lbl;
+  }
+
+  const bg = document.getElementById('heroBg');
+  resize();
+  (function loop(){
     const p = progress();
-    if (scrubbing && duration) targetT = p * (duration - 0.08);
     // 텍스트: 후반 40% 구간에서 위로 올라가며 페이드
     const tp = Math.max(0, (p - 0.6) / 0.4);
-    inner.style.transform = `translateY(${-tp * 120}px)`;
+    inner.style.transform = 'translateY(' + (-tp * 120) + 'px)';
     inner.style.opacity = (1 - tp).toFixed(3);
-  }
-  addEventListener('scroll', onScrollScrub, {passive:true});
-
-  // currentTime을 부드럽게 따라가게 (덜컹거림 방지)
-  (function loop(){
-    if (scrubbing && duration && Math.abs(targetT - currentT) > 0.001){
-      currentT += (targetT - currentT) * 0.14;
-      try{ sig.currentTime = currentT; }catch(e){}
+    // 프레임: 진행도 → 프레임 번호
+    const idx = Math.min(N-1, Math.round(p * (N-1)));
+    if (idx !== lastIdx || !loaded[idx]) draw(idx);
+    // 핸드오프: 마지막 12% 구간에서 카드로 축소
+    const hp = Math.max(0, (p - 0.88) / 0.12);
+    bg.style.transform = 'scale(' + (1.06 - hp * 0.14) + ')';
+    bg.style.borderRadius = (hp * 28) + 'px';
+    // 인디케이터 갱신
+    if (ticksWrap){
+      const onCount = Math.round(p * TICKS);
+      tickEls.forEach((t,i)=> t.classList.toggle('on', i < onCount));
+      ticksWrap._lbl.textContent = String(idx+1).padStart(2,'0') + ' / ' + N;
     }
     requestAnimationFrame(loop);
   })();
@@ -560,7 +653,7 @@ const countio = new IntersectionObserver((es)=>{
     const el = en.target, to = +el.dataset.to, dur=1500, t0=performance.now();
     (function tick(t){
       const k = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-k,3);
-      el.textContent = Math.round(to*e).toLocaleString();
+      el.textContent = String(Math.round(to*e));   // 2026이 "2,026"으로 찍히던 것 수정
       if(k<1) requestAnimationFrame(tick);
     })(t0);
     countio.unobserve(el);
