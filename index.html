@@ -130,6 +130,13 @@ nav.links{ display:flex; gap:26px; font-family:var(--font-mono); font-size:12px;
 nav.links a{ opacity:.75; transition:opacity .2s; }
 nav.links a:hover{ opacity:1; }
 @media(max-width:720px){ nav.links{ display:none; } }
+.nav-right{ display:flex; align-items:center; gap:clamp(14px,3vw,26px); }
+.lang5{ display:inline-flex; gap:2px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:999px; padding:3px; mix-blend-mode:normal; }
+.lang5 button{ border:0; background:transparent; color:var(--mut); font-family:var(--font-mono); font-weight:600; font-size:12px; line-height:1; padding:6px 9px; border-radius:999px; cursor:pointer; transition:background .15s, color .15s; }
+.lang5 button:hover{ color:var(--cream); }
+.lang5 button.act{ background:var(--orange); color:#0a0705; }
+.lang5[data-loading]{ opacity:.55; pointer-events:none; cursor:progress; }
+@media(max-width:400px){ .lang5 button{ padding:6px 7px; font-size:11px; } }
 
 /* ============================================================
    HERO — THE SIGNAL scroll-scrub
@@ -252,6 +259,10 @@ section.block{ position:relative; z-index:2; padding:clamp(56px,9vh,100px) clamp
 .card .tag{ display:inline-block; font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; padding:3px 9px; border-radius:100px; border:1px solid var(--line); margin-left:10px; vertical-align:middle; }
 .card .tag.live{ color:#37d67a; border-color:rgba(55,214,122,.4); }
 .card .tag.win{ color:var(--orange); border-color:rgba(255,140,66,.4); }
+.card-langs{ position:absolute; top:clamp(18px,2.6vw,26px); right:clamp(18px,2.6vw,26px); z-index:2; display:flex; flex-wrap:wrap; justify-content:flex-end; gap:5px; max-width:56%; }
+.card-langs span{ font-family:var(--font-mono); font-size:10px; letter-spacing:.03em; color:var(--mut); border:1px solid var(--line); border-radius:100px; padding:2px 7px; line-height:1.5; background:rgba(6,5,7,.35); }
+.card-langs span.on{ color:var(--cream); border-color:rgba(255,140,66,.4); }
+@media(max-width:720px){ .card-langs{ max-width:64%; } }
 .card p{ font-size:14.5px; color:var(--mut); line-height:1.8; }
 .card .meta{ font-family:var(--font-mono); font-size:11px; color:var(--mut2); margin-top:16px; letter-spacing:.03em; }
 @media(max-width:720px){ .work-grid{ grid-template-columns:1fr; } .work-grid .card:first-child{ grid-column:span 1; } }
@@ -292,14 +303,23 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 
 <!-- NAV -->
 <header>
-  <div class="brand">InsightLab <small>인사이트랩</small></div>
-  <nav class="links">
-    <a href="#flagship" data-scroll>FLAGSHIP</a>
-    <a href="#work" data-scroll>WORK</a>
-    <a href="#lab" data-scroll>LAB</a>
-    <a href="#about" data-scroll>ABOUT</a>
-    <a href="#finale" data-scroll>CONTACT</a>
-  </nav>
+  <div class="brand">InsightLab <small data-notr>인사이트랩</small></div>
+  <div class="nav-right">
+    <nav class="links">
+      <a href="#flagship" data-scroll>FLAGSHIP</a>
+      <a href="#work" data-scroll>WORK</a>
+      <a href="#lab" data-scroll>LAB</a>
+      <a href="#about" data-scroll>ABOUT</a>
+      <a href="#finale" data-scroll>CONTACT</a>
+    </nav>
+    <div class="lang5" data-lang5 role="group" aria-label="Language" data-notr>
+      <button type="button" data-lg="ko" class="act" title="한국어">한</button>
+      <button type="button" data-lg="en" title="English">EN</button>
+      <button type="button" data-lg="ja" title="日本語">日</button>
+      <button type="button" data-lg="zh" title="简体中文">简</button>
+      <button type="button" data-lg="tw" title="繁體中文">繁</button>
+    </div>
+  </div>
 </header>
 
 <!-- HERO — THE SIGNAL -->
@@ -311,10 +331,10 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
   <div class="hero-inner" id="heroInner">
     <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
     <h1 class="disp" id="heroHead"></h1>
-    <p class="hero-sub kr">공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오, 인사이트랩. 광주에서 시작해 전국·다국어로.</p>
+    <p class="hero-sub kr" data-i18n="heroSub">공공데이터와 AI로 지역을 잇는 위치정보(LBS) 1인 창업 스튜디오, 인사이트랩. 광주에서 시작해 전국·다국어로.</p>
     <div class="hero-cta">
-      <a class="btn primary" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener" data-cursor>광주든든 둘러보기 ↗</a>
-      <a class="btn ghost" href="#work" data-scroll data-cursor>프로젝트 보기</a>
+      <a class="btn primary" href="https://gwangju-deundeun.duckdns.org" target="_blank" rel="noopener" data-cursor data-i18n="heroCta1">광주든든 둘러보기 ↗</a>
+      <a class="btn ghost" href="#work" data-scroll data-cursor data-i18n="heroCta2">프로젝트 보기</a>
     </div>
   </div>
   <div class="scroll-hint">SCROLL<span class="bar"></span></div>
@@ -366,7 +386,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
   <div class="reveal">
     <div class="eyebrow">Work</div>
     <h2 class="h2">아이디어를 작동하는 서비스로.</h2>
-    <p class="lead kr">기획 · 디자인 · 개발 · 운영 · 배포까지, 대표 1인이 전부. 지금 살아있는 다섯 개의 제품.</p>
+    <p class="lead kr">기획 · 디자인 · 개발 · 운영 · 배포까지, 대표 1인이 전부. 지금 살아있는 제품들.</p>
   </div>
   <div class="work-grid">
     <article class="card reveal" data-tilt data-cursor>
@@ -376,25 +396,38 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
       <div class="meta">React 19 · KakaoMap SDK · Gemini Live · 공공데이터 API</div>
     </article>
     <article class="card reveal" data-tilt data-cursor>
-      <span class="num">02</span>
+      <span class="num">02</span><span class="tag live">LIVE</span>
+      <h3 class="disp">가게ON</h3>
+      <p class="kr">지도 링크 하나 붙이면 3분 만에 가게 홈페이지 자동 완성 · 발행. 메뉴판 사진 AI OCR 자동입력 · 다국어 자동전환, 폰만으로 끝.</p>
+      <div class="meta">Vanilla JS · Cloudflare Worker(D1/KV) · Gemini Vision · <a href="https://gage-on.com" target="_blank" rel="noopener">gage-on.com ↗</a></div>
+    </article>
+    <article class="card reveal" data-tilt data-cursor>
+      <span class="num">03</span><span class="tag">日本</span>
+      <div class="card-langs"><span class="on">한국어</span><span>English</span><span>日本語</span><span>简体中文</span><span>繁體中文</span></div>
+      <h3 class="disp">MiseON <span style="font-family:var(--font-mono);font-size:13px;opacity:.6">ミセON</span></h3>
+      <p class="kr">가게ON의 일본판 — 구글맵 링크로 일본 소상공인 홈페이지를 3분 만에. 5개 언어 자동 전환, 일본 감성 무드 8종. 2026 일본 디지털 시장개척단 도전.</p>
+      <div class="meta">Vanilla JS · Cloudflare Worker · Gemini · 5-Language</div>
+    </article>
+    <article class="card reveal" data-tilt data-cursor>
+      <span class="num">04</span>
       <h3 class="disp">수출든든</h3>
       <p class="kr">“어디에 팔까?” 5,125개 품목 기반 AI 수출국 추천과 바이어 통역까지 잇는 무역 어시스턴트.</p>
       <div class="meta">GPT-4o · 공공 무역데이터 · Cloudflare Workers</div>
     </article>
     <article class="card reveal" data-tilt data-cursor>
-      <span class="num">03</span>
+      <span class="num">05</span>
       <h3 class="disp">구직든든</h3>
       <p class="kr">광주 일자리 · 훈련 · 창업지원 · 청년정책을 공공 API로 모은 통합 웹앱.</p>
       <div class="meta">공공 API · React · Cloudflare Workers</div>
     </article>
     <article class="card reveal" data-tilt data-cursor>
-      <span class="num">04</span>
+      <span class="num">06</span>
       <h3 class="disp">수라 <span style="font-family:var(--font-mono);font-size:13px;opacity:.6">SURA</span></h3>
       <p class="kr">AI로 고문헌 속 한식을 복원 — 641종의 전통 음식을 6개 언어로.</p>
       <div class="meta">GPT-4o · 6개 언어 · 아카이브</div>
     </article>
     <article class="card reveal" data-tilt data-cursor>
-      <span class="num">05</span>
+      <span class="num">07</span>
       <h3 class="disp">앱인토스 미니앱 17종</h3>
       <p class="kr">금은동시세 · 현장출근부 · 급여명세서 등 실사용 미니앱을 토스 플랫폼 위에서.</p>
       <div class="meta">토스 미니앱 · TypeScript · 공공데이터 API</div>
@@ -469,11 +502,11 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
 
 <!-- FOOTER -->
 <footer>
-  <div class="foot-grid">
+  <div class="foot-grid" data-notr>
     <span class="b">인사이트랩 · InsightLab</span>
     <span>대표 이현진</span>
     <span>사업자등록번호 121-32-93146</span>
-    <span>광주광역시 남구</span>
+    <span>전남광주통합특별시 동구 금남로 245, 5층 (전일빌딩)</span>
     <span>© 2026 InsightLab</span>
   </div>
 </footer>
@@ -714,6 +747,80 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
   });
   card.addEventListener('mouseleave', ()=>{ card.style.transform=''; });
 });
+
+/* ---------- Language toggle (5 languages, default 한국어) ----------
+   가게ON 발행 사이트 방식 이식: 한국어 텍스트 노드를 수집해 선택 언어로 런타임 번역
+   (Google translate gtx, 세션 캐시). 팩 없이 즉시 적용. ko=원문. */
+(function(){
+  var w = document.querySelector('[data-lang5]'); if(!w) return;
+  var base = 'ko';
+  var GT = { ko:'ko', en:'en', ja:'ja', zh:'zh-CN', tw:'zh-TW' };
+  var HL = { ko:'ko', en:'en', ja:'ja', zh:'zh-Hans', tw:'zh-Hant' };
+  var hasKR = function(s){ return /[가-힣]/.test(s); };
+  var nodes = [], attrs = [];
+  var TW = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), n;
+  while(n = TW.nextNode()){
+    var p = n.parentNode;
+    if(p && /^(SCRIPT|STYLE|NOSCRIPT)$/.test(p.nodeName)) continue;
+    if(w.contains(p)) continue;
+    if(p && p.closest && p.closest('[data-notr]')) continue;
+    var v = n.nodeValue; if(!v || !v.trim()) continue;
+    if(!hasKR(v)) continue;
+    nodes.push([n, v]);
+  }
+  ['placeholder','aria-label','title','alt'].forEach(function(a){
+    var es = document.querySelectorAll('['+a+']');
+    for(var i=0;i<es.length;i++){
+      if(w.contains(es[i])) continue;
+      if(es[i].closest && es[i].closest('[data-notr]')) continue;
+      var ov = es[i].getAttribute(a) || '';
+      if(ov.trim() && hasKR(ov)) attrs.push([es[i], a, ov]);
+    }
+  });
+  var mt = {}, CK = 'il_mt';
+  try{ var c = sessionStorage.getItem(CK); if(c) mt = JSON.parse(c) || {}; }catch(e){}
+  function save(){ try{ sessionStorage.setItem(CK, JSON.stringify(mt)); }catch(e){} }
+  function trans(lg, strs, cb){
+    var tl = GT[lg] || lg, sl = GT[base] || base; mt[lg] = mt[lg] || {};
+    var uniq = [], seen = {};
+    for(var s=0;s<strs.length;s++){ var q = strs[s]; if(q && !seen[q] && !(q in mt[lg])){ seen[q]=1; uniq.push(q); } }
+    if(!uniq.length){ cb(); return; }
+    var i=0, active=0, done=0, total=uniq.length;
+    (function step(){
+      while(active < 6 && i < total){ (function(q){
+        active++;
+        var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl='+sl+'&tl='+tl+'&dt=t&q='+encodeURIComponent(q);
+        fetch(url).then(function(r){ return r.json(); }).then(function(j){
+          var out='', segs=(j&&j[0])||[]; for(var z=0;z<segs.length;z++){ var pc = segs[z]&&segs[z][0]; if(typeof pc==='string') out += pc; } mt[lg][q] = out || q;
+        }).catch(function(){ mt[lg][q] = q; }).then(function(){ active--; done++; if(done>=total){ save(); cb(); } else step(); });
+      })(uniq[i++]); }
+    })();
+  }
+  function paint(lg){
+    var M = (lg===base) ? null : (mt[lg] || {});
+    nodes.forEach(function(pr){ var orig=pr[1], k=orig.trim(); if(lg===base){ pr[0].nodeValue=orig; return; } var tr=M&&M[k]; pr[0].nodeValue = tr ? orig.replace(k, tr) : orig; });
+    attrs.forEach(function(pr){ var orig=pr[2], k=orig.trim(); if(lg===base){ pr[0].setAttribute(pr[1], orig); return; } var tr=M&&M[k]; pr[0].setAttribute(pr[1], tr ? orig.replace(k, tr) : orig); });
+    document.documentElement.lang = HL[lg] || lg;
+    var bs = w.querySelectorAll('button'); for(var b=0;b<bs.length;b++) bs[b].classList.toggle('act', bs[b].getAttribute('data-lg')===lg);
+    try{ localStorage.setItem('il_lang', lg); }catch(e){}
+  }
+  function apply(lg){
+    if(lg === base){ paint(lg); return; }
+    var need = [], M = mt[lg] || {};
+    nodes.forEach(function(pr){ var k=pr[1].trim(); if(k && !M[k]) need.push(k); });
+    attrs.forEach(function(pr){ var k=pr[2].trim(); if(k && !M[k]) need.push(k); });
+    if(!need.length){ paint(lg); return; }
+    w.setAttribute('data-loading','1');
+    trans(lg, need, function(){ w.removeAttribute('data-loading'); paint(lg); });
+  }
+  w.addEventListener('click', function(e){
+    var t = e.target; while(t && t!==w && !(t.getAttribute && t.getAttribute('data-lg'))) t = t.parentNode;
+    if(!t || t===w) return; apply(t.getAttribute('data-lg'));
+  });
+  var saved = 'ko'; try{ saved = localStorage.getItem('il_lang') || 'ko'; }catch(e){}
+  if(saved && saved !== base){ try{ apply(saved); }catch(e){} }
+})();
 </script>
+
 </body>
 </html>
