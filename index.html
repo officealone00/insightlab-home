@@ -157,9 +157,8 @@ nav.links a:hover{ opacity:1; }
   background:var(--ink,#060507); overflow:hidden; }
 .hero-bg canvas{ display:none; }   /* 프레임 시퀀스 대신 터미널군 영상 사용 */
 .hero-white{ display:none; }
-.hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block;
-  opacity:var(--hp,0); }
-@media(max-width:720px){ .hero-video{ object-fit:contain; } }
+.hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block; opacity:var(--hp,0); }
+.hero-eyes{ position:absolute; inset:0; width:100%; height:100%; z-index:1; display:block; opacity:var(--hp,0); pointer-events:none; }
 /* 스크롤 진행 인디케이터 (우측) */
 .hero-ticks{ display:none; position:absolute; right:clamp(14px,3vw,40px); top:50%; transform:translateY(-50%); z-index:2;
   display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
@@ -337,6 +336,8 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
       <source src="assets/terminal-kun-hero.webm" type="video/webm" />
       <source src="assets/terminal-kun-hero.mp4" type="video/mp4" />
     </video>
+    <!-- 영상 위 눈 마우스 추적 오버레이 -->
+    <canvas class="hero-eyes" id="heroEyes"></canvas>
   </div>
   <div class="hero-inner" id="heroInner">
     <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
@@ -608,13 +609,8 @@ addEventListener('scroll', updProg, {passive:true}); updProg();
     img.src = src(i);
     frames[i] = img;
   }
-  // 1번 프레임 먼저, 나머지는 백그라운드에서 순차 로드
-  loadFrame(0);
-  let qi = 1;
-  (function queue(){
-    for(let k=0; k<6 && qi<N; k++, qi++) loadFrame(qi);
-    if (qi < N) setTimeout(queue, 120);
-  })();
+  // 프레임 시퀀스 비활성화 (히어로는 터미널군 영상 + 눈 오버레이 사용) → f_*.webp 404 방지
+  // loadFrame 호출 안 함. draw()는 로드된 프레임이 없으면 자동으로 아무것도 안 그림.
 
   function resize(){
     canvas.width = canvas.clientWidth * Math.min(devicePixelRatio||1, 2);
@@ -838,6 +834,41 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
   });
   var saved = 'ko'; try{ saved = localStorage.getItem('il_lang') || 'ko'; }catch(e){}
   if(saved && saved !== base){ try{ apply(saved); }catch(e){} }
+})();
+
+/* ---------- 히어로 눈 마우스 추적 오버레이 (터미널군 영상 위) ----------
+   영상 속 두 눈은 정지 상태 → 그 위에 살짝 큰 검정 눈을 덮고 마우스 방향으로 이동. */
+(function(){
+  var cv = document.getElementById('heroEyes'); if(!cv) return;
+  var ctx = cv.getContext('2d');
+  var VW = 1280, VH = 720;                 // 영상 원본 비율 (object-fit:contain 기준)
+  var EYES = [{x:0.385, y:0.372}, {x:0.545, y:0.372}];   // 영상 프레임 내 눈 중심(정규화)
+  var EW = 0.075, EH = 0.10;               // 오버레이 눈 크기(영상 눈보다 크게 = 항상 덮음)
+  var OFX = 0.0085, OFY = 0.006;           // 마우스 최대 이동량(영상 폭/높이 대비)
+  var mx = 0.5, my = 0.45, ox = 0, oy = 0, dpr = 1, W = 0, H = 0;
+  addEventListener('pointermove', function(e){ mx = e.clientX/innerWidth; my = e.clientY/innerHeight; }, {passive:true});
+  function resize(){ dpr = Math.min(devicePixelRatio||1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  addEventListener('resize', resize, {passive:true});
+  function contain(){ var va = VW/VH, ba = W/H, dW, dH; if(ba > va){ dH = H; dW = H*va; } else { dW = W; dH = W/va; } return { dW:dW, dH:dH, ox:(W-dW)/2, oy:(H-dH)/2 }; }
+  function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    var c = contain();
+    var dxn = Math.max(-1, Math.min(1, (mx-0.5)*2.2));
+    var dyn = Math.max(-1, Math.min(1, (my-0.45)*2.2));
+    ox += (dxn*OFX*c.dW - ox)*0.12;
+    oy += (dyn*OFY*c.dH - oy)*0.12;
+    var ew = EW*c.dW, eh = EH*c.dH, rad = Math.min(ew,eh)*0.24;
+    EYES.forEach(function(e){
+      var cx = c.ox + e.x*c.dW + ox, cy = c.oy + e.y*c.dH + oy;
+      var g = ctx.createLinearGradient(0, cy-eh/2, 0, cy+eh/2);
+      g.addColorStop(0,'#2b2b2f'); g.addColorStop(.5,'#151517'); g.addColorStop(1,'#0b0b0d');
+      ctx.fillStyle = g;
+      rrect(cx-ew/2, cy-eh/2, ew, eh, rad); ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  resize(); requestAnimationFrame(frame);
 })();
 </script>
 
