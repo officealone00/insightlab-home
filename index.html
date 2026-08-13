@@ -171,7 +171,7 @@ nav.links a:hover{ opacity:1; }
 }
 /* 히어로 풀스크린 배경 영상 */
 .hero-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; will-change:transform,border-radius; transform:scale(1.06);
-  background:transparent; overflow:hidden; }
+  background:#14100e; overflow:hidden; }
 .hero-bg canvas{ display:none; }   /* 프레임 시퀀스 대신 터미널군 영상 사용 */
 .hero-white{ display:none; }
 .hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block; opacity:var(--hp,0); }
@@ -350,8 +350,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
     <canvas id="heroCanvas"></canvas>
     <!-- 히어로 풀배경 마스코트 영상 (배경 투명 webm + 다크 베이크 mp4 폴백). 파일은 deploy/assets/ 에 넣기 -->
     <!-- 기존 3D 영상 캐릭터 (투명 webm → 페이지 웜다크 배경 위에 뜸) -->
-    <video class="hero-video" autoplay muted loop playsinline preload="auto">
-      <source src="assets/terminal-kun-hero.webm" type="video/webm" />
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" style="background:#14100e">
       <source src="assets/terminal-kun-hero.mp4" type="video/mp4" />
     </video>
     <!-- 영상 위 눈 마우스 추적 오버레이 -->
