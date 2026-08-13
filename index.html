@@ -356,8 +356,8 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
     <canvas id="heroCanvas"></canvas>
     <!-- 히어로 풀배경 마스코트 영상 (배경 투명 webm + 다크 베이크 mp4 폴백). 파일은 deploy/assets/ 에 넣기 -->
     <!-- 기존 3D 영상 캐릭터 (투명 webm → 페이지 웜다크 배경 위에 뜸) -->
-    <!-- 터미널군 코드 렌더 (정확한 팔레트 #37B34A·#E8483B·#F2B928 · 첫 화면 숨김→스크롤 시 등장 · 눈 마우스 추적) -->
-    <canvas class="hero-eyes" id="heroEyes"></canvas>
+    <!-- 터미널군 3D 영상 (첫 화면 숨김 → 스크롤 시 등장, --hp 연동) -->
+    <video class="hero-video" id="heroVideo" src="assets/terminal-kun-hero.mp4" muted loop autoplay playsinline preload="auto"></video>
   </div>
   <div class="hero-inner" id="heroInner">
     <span class="kicker"><span class="dot"></span> InsightLab · LBS Studio · Gwangju · Est. 2026</span>
