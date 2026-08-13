@@ -837,30 +837,40 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
 })();
 
 /* ---------- 히어로 눈 마우스 추적 오버레이 (터미널군 영상 위) ----------
-   영상 속 두 눈은 정지 상태 → 그 위에 살짝 큰 검정 눈을 덮고 마우스 방향으로 이동. */
+   각 눈에서 커서로의 각도(atan2)를 구해 그 방향으로 눈을 이동. 영상 눈은 정지라
+   살짝 큰 검정 눈으로 덮어 항상 가림. 부모 transform 스케일까지 보정. */
 (function(){
   var cv = document.getElementById('heroEyes'); if(!cv) return;
   var ctx = cv.getContext('2d');
-  var VW = 1280, VH = 720;                 // 영상 원본 비율 (object-fit:contain 기준)
-  var EYES = [{x:0.385, y:0.372}, {x:0.545, y:0.372}];   // 영상 프레임 내 눈 중심(정규화)
-  var EW = 0.075, EH = 0.10;               // 오버레이 눈 크기(영상 눈보다 크게 = 항상 덮음)
-  var OFX = 0.0085, OFY = 0.006;           // 마우스 최대 이동량(영상 폭/높이 대비)
-  var mx = 0.5, my = 0.45, ox = 0, oy = 0, dpr = 1, W = 0, H = 0;
-  addEventListener('pointermove', function(e){ mx = e.clientX/innerWidth; my = e.clientY/innerHeight; }, {passive:true});
-  function resize(){ dpr = Math.min(devicePixelRatio||1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  var VW = 1280, VH = 720;                                  // 영상 비율 (object-fit:contain)
+  var EYES = [{x:0.385, y:0.372}, {x:0.545, y:0.372}];      // 영상 프레임 내 눈 중심(정규화)
+  var EW = 0.088, EH = 0.118;                               // 눈 크기(영상 대비) — 영상 눈보다 크게
+  var RX = 0.016, RY = 0.020;                               // 마우스 방향 최대 이동 반경(영상 대비)
+  var lastCX = innerWidth/2, lastCY = innerHeight*0.5, have = false;
+  var off = [{x:0,y:0},{x:0,y:0}];
+  var dpr = 1, W = 0, H = 0;
+  addEventListener('pointermove', function(e){ lastCX = e.clientX; lastCY = e.clientY; have = true; }, {passive:true});
+  function resize(){ dpr = Math.min(devicePixelRatio||1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.max(1,W*dpr); cv.height = Math.max(1,H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
   addEventListener('resize', resize, {passive:true});
   function contain(){ var va = VW/VH, ba = W/H, dW, dH; if(ba > va){ dH = H; dW = H*va; } else { dW = W; dH = W/va; } return { dW:dW, dH:dH, ox:(W-dW)/2, oy:(H-dH)/2 }; }
   function rrect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
   function frame(){
+    if(!W || !H){ resize(); }
     ctx.clearRect(0,0,W,H);
     var c = contain();
-    var dxn = Math.max(-1, Math.min(1, (mx-0.5)*2.2));
-    var dyn = Math.max(-1, Math.min(1, (my-0.45)*2.2));
-    ox += (dxn*OFX*c.dW - ox)*0.12;
-    oy += (dyn*OFY*c.dH - oy)*0.12;
-    var ew = EW*c.dW, eh = EH*c.dH, rad = Math.min(ew,eh)*0.24;
-    EYES.forEach(function(e){
-      var cx = c.ox + e.x*c.dW + ox, cy = c.oy + e.y*c.dH + oy;
+    // 화면 좌표 → 캔버스 레이아웃 좌표 (부모 transform 스케일 보정)
+    var rect = cv.getBoundingClientRect();
+    var sx = rect.width ? (W/rect.width) : 1, sy = rect.height ? (H/rect.height) : 1;
+    var mpx = (lastCX - rect.left) * sx, mpy = (lastCY - rect.top) * sy;
+    var ew = EW*c.dW, eh = EH*c.dH, rad = Math.min(ew,eh)*0.26;
+    EYES.forEach(function(e, i){
+      var ecx = c.ox + e.x*c.dW, ecy = c.oy + e.y*c.dH;
+      var ang = Math.atan2(mpy - ecy, mpx - ecx);
+      var tx = Math.cos(ang) * RX * c.dW;
+      var ty = Math.sin(ang) * RY * c.dH;
+      off[i].x += (tx - off[i].x) * 0.14;
+      off[i].y += (ty - off[i].y) * 0.14;
+      var cx = ecx + off[i].x, cy = ecy + off[i].y;
       var g = ctx.createLinearGradient(0, cy-eh/2, 0, cy+eh/2);
       g.addColorStop(0,'#2b2b2f'); g.addColorStop(.5,'#151517'); g.addColorStop(1,'#0b0b0d');
       ctx.fillStyle = g;
