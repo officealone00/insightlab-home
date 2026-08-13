@@ -171,7 +171,7 @@ nav.links a:hover{ opacity:1; }
 }
 /* 히어로 풀스크린 배경 영상 */
 .hero-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; will-change:transform,border-radius; transform:scale(1.06);
-  background:#14100e; overflow:hidden; }
+  background:transparent; overflow:hidden; }
 .hero-bg canvas{ display:none; }   /* 프레임 시퀀스 대신 터미널군 영상 사용 */
 .hero-white{ display:none; }
 .hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block; opacity:var(--hp,0); }
@@ -350,10 +350,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
     <canvas id="heroCanvas"></canvas>
     <!-- 히어로 풀배경 마스코트 영상 (배경 투명 webm + 다크 베이크 mp4 폴백). 파일은 deploy/assets/ 에 넣기 -->
     <!-- 기존 3D 영상 캐릭터 (투명 webm → 페이지 웜다크 배경 위에 뜸) -->
-    <video class="hero-video" autoplay muted loop playsinline preload="auto" style="background:#14100e">
-      <source src="assets/terminal-kun-hero.mp4" type="video/mp4" />
-    </video>
-    <!-- 영상 위 눈 마우스 추적 오버레이 -->
+    <!-- 터미널군 코드 렌더 (웜다크 위에 직접 그림 · 눈 마우스 추적 · 모든 기기 동일) -->
     <canvas class="hero-eyes" id="heroEyes"></canvas>
   </div>
   <div class="hero-inner" id="heroInner">
@@ -903,18 +900,28 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
     } else {
       mpx = (lastCX - rect.left) * sx; mpy = (lastCY - rect.top) * sy;
     }
-    // ----- 영상 위 눈 오버레이 (기존 영상 캐릭터의 눈을 마우스 방향으로) -----
-    var ew = EW*c.dW, eh = EH*c.dH, rad = Math.min(ew,eh)*0.26;
-    EYES.forEach(function(e, i){
-      var ecx = c.ox + e.x*c.dW, ecy = c.oy + e.y*c.dH;
-      var ang = Math.atan2(mpy - ecy, mpx - ecx);
-      off[i].x += (Math.cos(ang)*RX*c.dW - off[i].x)*0.14;
-      off[i].y += (Math.sin(ang)*RY*c.dH - off[i].y)*0.14;
-      var cx = ecx + off[i].x, cy = ecy + off[i].y;
-      var g = ctx.createLinearGradient(0, cy-eh/2, 0, cy+eh/2);
-      g.addColorStop(0,'#2b2b2f'); g.addColorStop(.5,'#151517'); g.addColorStop(1,'#0b0b0d');
-      ctx.fillStyle = g;
-      rrect(cx-ew/2, cy-eh/2, ew, eh, rad); ctx.fill();
+    // ----- 터미널군 전체 렌더 (웜다크 위에 직접 그림) -----
+    var pitch = Math.min(W/(COLS+2), H/(ROWS+2));
+    var gx = (W - COLS*pitch)/2, gy = (H - ROWS*pitch)/2, gap = pitch*0.16, tile = pitch - gap;
+    var curOn = 0.45 + 0.55*Math.abs(Math.sin(now/280));
+    for(var r=0;r<ROWS;r++)for(var cc=0;cc<COLS;cc++){
+      var ch = G[r][cc], x = gx+cc*pitch, y = gy+r*pitch;
+      if(ch==='.'){ if(!EXT[r][cc]) cube(x,y,tile,'#f2f4f6','#ffffff','#ccd3d7'); continue; }
+      if(ch==='K') cube(x,y,tile,'#3b3b44','#565662','#242429');
+      else if(ch==='M') cube(x,y,tile,'#141416','#2b2b31','#050506');
+      else if(ch==='E') cube(x,y,tile,'#f2f4f6','#ffffff','#ccd3d7');
+      else if(ch==='R') glow(x,y,tile,'#E8483B');
+      else if(ch==='Y') glow(x,y,tile,'#F2B928');
+      else if(ch==='G'){ ctx.globalAlpha=curOn; glow(x,y,tile,'#37B34A'); ctx.globalAlpha=1; }
+    }
+    var eyeBlk = [[8,6],[14,6]];
+    eyeBlk.forEach(function(b,i){
+      var bcx = gx+(b[0]+1)*pitch, bcy = gy+(b[1]+1)*pitch, ang = Math.atan2(mpy-bcy, mpx-bcx);
+      off[i].x += (Math.cos(ang)*pitch*0.95 - off[i].x)*0.14;
+      off[i].y += (Math.sin(ang)*pitch*0.70 - off[i].y)*0.14;
+      for(var dy=0;dy<2;dy++)for(var dx=0;dx<2;dx++){
+        cube(gx+(b[0]+dx)*pitch+off[i].x, gy+(b[1]+dy)*pitch+off[i].y, tile, '#141416','#2b2b31','#050506');
+      }
     });
     requestAnimationFrame(frame);
   }
