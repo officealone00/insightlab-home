@@ -175,7 +175,7 @@ nav.links a:hover{ opacity:1; }
     radial-gradient(85% 65% at 2% 36%, rgba(126,58,22,0.30), transparent 52%),
     radial-gradient(80% 85% at 100% 100%, rgba(58,28,76,0.30), transparent 58%),
     #0a090c; overflow:hidden; }
-.hero-bg canvas{ display:none; }   /* 프레임 시퀀스 대신 터미널군 영상 사용 */
+#heroCanvas{ display:none; }   /* 옛 프레임 시퀀스 캔버스(미사용) — 캐릭터는 #heroEyes에 렌더 */
 .hero-white{ display:none; }
 .hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block; opacity:var(--hp,0); }
 .hero-eyes{ position:absolute; inset:0; width:100%; height:100%; z-index:1; display:block; opacity:var(--hp,0); pointer-events:none; }
