@@ -177,7 +177,10 @@ nav.links a:hover{ opacity:1; }
     #0a090c; overflow:hidden; }
 #heroCanvas{ display:none; }   /* 옛 프레임 시퀀스 캔버스(미사용) — 캐릭터는 #heroEyes에 렌더 */
 .hero-white{ display:none; }
-.hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block; opacity:var(--hp,0); }
+.hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:center; z-index:1; display:block; opacity:var(--hp,0);
+  /* 영상 사각 테두리를 웜다크 배경으로 페이드해 이질감 제거 */
+  -webkit-mask-image:radial-gradient(118% 132% at 50% 44%, #000 62%, rgba(0,0,0,0) 100%);
+  mask-image:radial-gradient(118% 132% at 50% 44%, #000 62%, rgba(0,0,0,0) 100%); }
 .hero-eyes{ position:absolute; inset:0; width:100%; height:100%; z-index:1; display:block; opacity:var(--hp,0); pointer-events:none; }
 /* 스크롤 진행 인디케이터 (우측) */
 .hero-ticks{ display:none; position:absolute; right:clamp(14px,3vw,40px); top:50%; transform:translateY(-50%); z-index:2;
