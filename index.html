@@ -138,6 +138,23 @@ nav.links a:hover{ opacity:1; }
 .lang5[data-loading]{ opacity:.55; pointer-events:none; cursor:progress; }
 @media(max-width:400px){ .lang5 button{ padding:6px 7px; font-size:11px; } }
 
+/* ===== 터미널 커서 (깜빡이는 초록 캐럿 → 링크 위 오렌지) ===== */
+@media (hover:hover) and (pointer:fine){
+  html, body, a, button, input, textarea, select, .btn, [data-cursor], .lang5 button, .card { cursor:none; }
+}
+#termcursor{
+  position:fixed; left:0; top:0; z-index:9999; pointer-events:none;
+  width:9px; height:20px; margin:-10px 0 0 -4px; border-radius:2px;
+  background:#37B34A; box-shadow:0 0 10px rgba(55,179,74,.85), 0 0 22px rgba(55,179,74,.45);
+  opacity:0; transition:background .15s, box-shadow .15s, width .15s, height .15s;
+  will-change:transform;
+}
+#termcursor::after{ content:"_"; position:absolute; left:13px; top:-2px; font-family:"JetBrains Mono",monospace; font-size:13px; color:#37B34A; opacity:0; transition:opacity .15s; }
+#termcursor.blink{ animation:tcblink 1.05s steps(1) infinite; }
+@keyframes tcblink{ 50%{ opacity:.2; } }
+#termcursor.hot{ background:var(--orange,#FF8C42); box-shadow:0 0 12px rgba(255,140,66,.85), 0 0 26px rgba(255,140,66,.5); width:12px; height:22px; }
+@media (hover:none){ #termcursor{ display:none !important; } }
+
 /* ============================================================
    HERO — THE SIGNAL scroll-scrub
    ============================================================ */
@@ -879,6 +896,25 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
     requestAnimationFrame(frame);
   }
   resize(); requestAnimationFrame(frame);
+})();
+
+/* ---------- 터미널 커서 (깜빡이는 초록 캐럿, 링크 위 오렌지) ---------- */
+(function(){
+  if (matchMedia && matchMedia('(hover:none)').matches) return;   // 터치 기기 제외
+  var el = document.createElement('div'); el.id = 'termcursor'; el.className = 'blink';
+  document.body.appendChild(el);
+  var x = innerWidth/2, y = innerHeight/2, tx = x, ty = y, shown = false;
+  addEventListener('pointermove', function(e){
+    tx = e.clientX; ty = e.clientY;
+    if(!shown){ shown = true; el.style.opacity = '1'; }
+  }, {passive:true});
+  addEventListener('pointerdown', function(){ el.classList.add('press'); });
+  addEventListener('pointerup', function(){ el.classList.remove('press'); });
+  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; shown = false; });
+  var HOT = 'a,button,.btn,[data-cursor],.lang5 button,.card,input,textarea,select,[role="button"]';
+  document.addEventListener('pointerover', function(e){ if(e.target.closest && e.target.closest(HOT)){ el.classList.add('hot'); el.classList.remove('blink'); } });
+  document.addEventListener('pointerout',  function(e){ if(e.target.closest && e.target.closest(HOT)){ el.classList.remove('hot'); el.classList.add('blink'); } });
+  (function loop(){ x += (tx-x)*0.4; y += (ty-y)*0.4; el.style.transform = 'translate(' + x + 'px,' + y + 'px)'; requestAnimationFrame(loop); })();
 })();
 </script>
 
