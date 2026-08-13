@@ -349,8 +349,7 @@ footer{ position:relative; z-index:2; border-top:1px solid var(--line); padding:
     <div class="hero-white"></div>
     <canvas id="heroCanvas"></canvas>
     <!-- 히어로 풀배경 마스코트 영상 (배경 투명 webm + 다크 베이크 mp4 폴백). 파일은 deploy/assets/ 에 넣기 -->
-    <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/terminal-kun-hero-poster.png">
-      <source src="assets/terminal-kun-hero.webm" type="video/webm" />
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" style="background:#060507">
       <source src="assets/terminal-kun-hero.mp4" type="video/mp4" />
     </video>
     <!-- 영상 위 눈 마우스 추적 오버레이 -->
@@ -864,9 +863,12 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
   var EW = 0.088, EH = 0.118;                               // 눈 크기(영상 대비) — 영상 눈보다 크게
   var RX = 0.016, RY = 0.020;                               // 마우스 방향 최대 이동 반경(영상 대비)
   var lastCX = innerWidth/2, lastCY = innerHeight*0.5, have = false;
+  var lastMove = -1e9, idleUntil = 0, roamX = 0, roamY = 0, roamTX = 0, roamTY = 0;
   var off = [{x:0,y:0},{x:0,y:0}];
   var dpr = 1, W = 0, H = 0;
-  addEventListener('pointermove', function(e){ lastCX = e.clientX; lastCY = e.clientY; have = true; }, {passive:true});
+  function moved(cx,cy){ lastCX = cx; lastCY = cy; have = true; lastMove = performance.now(); }
+  addEventListener('pointermove', function(e){ moved(e.clientX, e.clientY); }, {passive:true});
+  addEventListener('touchmove', function(e){ if(e.touches && e.touches[0]) moved(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
   function resize(){ dpr = Math.min(devicePixelRatio||1, 2); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.max(1,W*dpr); cv.height = Math.max(1,H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
   addEventListener('resize', resize, {passive:true});
   function contain(){ var va = VW/VH, ba = W/H, dW, dH; if(ba > va){ dH = H; dW = H*va; } else { dW = W; dH = W/va; } return { dW:dW, dH:dH, ox:(W-dW)/2, oy:(H-dH)/2 }; }
@@ -878,7 +880,17 @@ document.querySelectorAll('[data-tilt]').forEach(card=>{
     // 화면 좌표 → 캔버스 레이아웃 좌표 (부모 transform 스케일 보정)
     var rect = cv.getBoundingClientRect();
     var sx = rect.width ? (W/rect.width) : 1, sy = rect.height ? (H/rect.height) : 1;
-    var mpx = (lastCX - rect.left) * sx, mpy = (lastCY - rect.top) * sy;
+    var now = performance.now(), mpx, mpy;
+    if(now - lastMove > 1400){            // 입력 없으면 스스로 두리번 (모바일/유휴)
+      if(now > idleUntil){ idleUntil = now + 1500 + Math.random()*1600;
+        roamTX = c.ox + (0.15 + Math.random()*0.70)*c.dW;
+        roamTY = c.oy + (0.20 + Math.random()*0.55)*c.dH; }
+      if(!roamX){ roamX = c.ox + c.dW*0.5; roamY = c.oy + c.dH*0.5; }
+      roamX += (roamTX - roamX)*0.025; roamY += (roamTY - roamY)*0.025;
+      mpx = roamX; mpy = roamY;
+    } else {
+      mpx = (lastCX - rect.left) * sx; mpy = (lastCY - rect.top) * sy;
+    }
     var ew = EW*c.dW, eh = EH*c.dH, rad = Math.min(ew,eh)*0.26;
     EYES.forEach(function(e, i){
       var ecx = c.ox + e.x*c.dW, ecy = c.oy + e.y*c.dH;
